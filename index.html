@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dystopian ID - KAROLIS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Extended+Text&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at top, #1a000a 0%, #050007 40%, #000000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: "Courier New", monospace;
+            padding: 20px;
+            color: #f8f8f8;
+        }
+
+        .id-card {
+            background: rgba(5, 0, 10, 0.96);
+            border: 2px solid rgba(0, 255, 128, 0.4);
+            border-radius: 6px;
+            width: 400px;
+            padding: 30px;
+            position: relative;
+            box-shadow:
+                0 0 15px rgba(0, 255, 128, 0.3),
+                0 0 30px rgba(255, 0, 102, 0.25);
+            overflow: hidden;
+        }
+
+        .glitch {
+            position: relative;
+            animation: glitch-main 3s infinite;
+        }
+
+        @keyframes glitch-main {
+            0%, 90%, 100% {
+                transform: translate(0);
+            }
+            92% {
+                transform: translate(-2px, 1px) skewX(-0.5deg);
+            }
+            94% {
+                transform: translate(2px, -1px) skewX(0.5deg);
+            }
+            96% {
+                transform: translate(-1px, 2px) skewX(-0.5deg);
+            }
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 128, 0.7), transparent);
+            mix-blend-mode: screen;
+            animation: scan 4s infinite linear;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        .grid-lines {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.08) 1px, transparent 1px);
+            background-size: 16px 16px;
+            pointer-events: none;
+            mix-blend-mode: soft-light;
+        }
+
+        .section {
+            margin-bottom: 14px;
+        }
+
+        .label {
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            color: rgba(190, 255, 190, 0.9);
+        }
+
+        .value {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .red-text {
+            color: #ff4d4d;
+            text-shadow: 0 0 5px #ff4d4d;
+        }
+
+        .yellow-text {
+            color: #ffe066;
+            text-shadow: 0 0 4px rgba(255, 224, 102, 0.7);
+        }
+
+        .violation-marker {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #ff4d4d;
+            margin-right: 4px;
+            animation: blink 1s infinite;
+            box-shadow: 0 0 8px #ff4d4d;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% {
+                opacity: 1;
+            }
+            25%, 75% {
+                opacity: 0.3;
+            }
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent,
+                rgba(0, 255, 128, 0.8),
+                rgba(255, 0, 102, 0.9),
+                transparent);
+            margin: 10px 0 14px;
+            opacity: 0.9;
+        }
+
+        .serial {
+            color: #888;
+            font-size: 9px;
+            letter-spacing: 1px;
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .serial span {
+            color: #0f0;
+        }
+
+        .warning-stamp {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            border: 2px solid #ff0040;
+            color: #ffb3c9;
+            padding: 8px 34px;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            opacity: 0.22;
+            text-shadow:
+                0 0 6px #ff0040,
+                0 0 14px rgba(0, 255, 128, 0.9);
+            pointer-events: none;
+            animation: pulse 2.6s infinite;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.26;
+            }
+            50% {
+                opacity: 0.08;
+            }
+        }
+
+        .resistance-mark {
+            position: absolute;
+            bottom: 16px;
+            right: 18px;
+            width: 40px;
+            height: 40px;
+            opacity: 0.6;
+            filter: drop-shadow(0 0 8px rgba(0, 255, 128, 0.8));
+        }
+
+        .resistance-mark svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="id-card glitch">
+        <div class="grid-lines"></div>
+        <div class="scanline"></div>
+        
+        <div style="background: rgb(0, 0, 0); padding: 15px; margin-bottom: 20px; text-align: center;">
+            <span style="font-family: 'Libre Barcode 39 Extended Text'; font-size: 55px; color: rgb(255, 255, 255);">KJ82NC2N29X</span>
+        </div>
+        
+        <div class="section">
+            <div class="label">NAME</div>
+            <div class="value">KAROLIS</div>
+        </div>
+
+        <div class="section">
+            <div class="label">OCCUPATION</div>
+            <div class="value">FEE ENFORCEMENT AGENT</div>
+        </div>
+        <div class="section yellow-text">
+            <div class="label">HEALTH PROFILE</div>
+            <div class="value">DIAGNOSIS: SMOKES LIKE A BROKEN EXHAUST PIPE</div>
+        </div>
+        <div class="section">
+            <div class="label">URBAN LEVEL</div>
+            <div class="value">NEON DISTRICT 7, LOWER LEVEL ACCESS</div>
+        </div>
+
+        <div class="section red-text">
+            <div class="label">THREAT ASSESSMENT</div>
+            <div class="value"><span class="violation-marker"></span>CRITICAL</div>
+        </div>
+
+        <div class="section">
+            <div class="label">TRANSPORTATION ALLOWANCE</div>
+            <div class="value">• JACKED HOVERCAR - 4 REPORTS</div>
+            <div class="value">• UNDERCITY TRANSIT - AUTHORIZED</div>
+        </div>
+
+        <div class="section red-text">
+            <div class="label">ALLOWED FOREIGN TRAVEL</div>
+            <div class="value">PROHIBITED - FLIGHT RISK</div>
+        </div>
+
+        <div class="section yellow-text">
+            <div class="label">COMPLIANCE SCORE</div>
+            <div class="value">25/100 - BELOW THRESHOLD</div>
+        </div>
+
+        <div class="section yellow-text">
+            <div class="label">ALLOWED H2O PER DAY</div>
+            <div class="value">1L RATION - REDUCED FOR VIOLATIONS</div>
+        </div>
+
+        <div class="section yellow-text">
+            <div class="label">COMMUNICATION PRIVILEGES</div>
+            <div class="value">MONITORED - ENCRYPTED TRAFFIC DETECTED</div>
+        </div>
+
+        <div class="section red-text">
+            <div class="label">CURFEW VIOLATIONS</div>
+            <div class="value">11 INCIDENTS - ACTIVE MONITORING</div>
+        </div>
+
+        <div class="section">
+            <div class="label">SICKNESS LEVEL</div>
+            <div class="value">MODERATE</div>
+        </div>
+
+        <div class="section yellow-text">
+            <div class="label">NEURAL CHIP STATUS</div>
+            <div class="value">MALFUNCTION DETECTED</div>
+        </div>
+        <div class="sersial">
+            SN: KR-0L15-N3ON-RN-2140-XF9
+        </div>
+
+        <div class="warning-stamp">FLAGGED</div>
+
+        <div class="resistance-mark">
+            <svg viewBox="0 0 100 100" fill="none" stroke="#0f0" stroke-width="3">
+                <circle cx="50" cy="50" r="30"/>
+                <circle cx="50" cy="50" r="20"/>
+                <circle cx="50" cy="50" r="10"/>
+                <line x1="50" y1="20" x2="50" y2="80"/>
+                <line x1="20" y1="50" x2="80" y2="50"/>
+            </svg>
+        </div>
+    </div>
+</body>
+</html>
