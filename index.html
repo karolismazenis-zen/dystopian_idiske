@@ -25,6 +25,7 @@
             font-family: "Courier New", monospace;
             padding: 20px;
             color: #f8f8f8;
+            overflow: hidden;
         }
 
         .id-card {
@@ -58,6 +59,40 @@
             96% {
                 transform: translate(-1px, 2px) skewX(-0.5deg);
             }
+        }
+
+        /* Crash-out animation for the card */
+        @keyframes card-glitch-out {
+            0% {
+                opacity: 1;
+                filter: none;
+            }
+            20% {
+                transform: translate(3px, -2px) skewX(1deg);
+                filter: hue-rotate(40deg) contrast(1.4);
+            }
+            40% {
+                transform: translate(-4px, 2px) skewX(-2deg);
+                filter: hue-rotate(-40deg) contrast(2) saturate(1.5);
+            }
+            60% {
+                transform: translate(6px, -4px) skewX(3deg);
+                filter: brightness(2) contrast(2.5);
+            }
+            80% {
+                opacity: 0.2;
+                transform: translate(-10px, 4px) skewX(-5deg);
+                filter: blur(2px);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(0, 0) skewX(0deg);
+                filter: blur(4px);
+            }
+        }
+
+        .id-card.crash {
+            animation: card-glitch-out 1.2s forwards;
         }
 
         .scanline {
@@ -204,10 +239,65 @@
             width: 100%;
             height: 100%;
         }
+
+        /* Full-screen hijack overlay */
+        .hijack-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, #ff0000 0%, #000000 60%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ff003c;
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            text-shadow:
+                0 0 8px #ff003c,
+                0 0 18px #ffffff;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hijack-overlay span {
+            border: 2px solid #ff003c;
+            padding: 20px 30px;
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        @keyframes hijack-flash {
+            0% {
+                opacity: 0;
+                filter: none;
+            }
+            25% {
+                opacity: 1;
+                filter: contrast(2) brightness(2);
+            }
+            50% {
+                opacity: 0.2;
+                filter: grayscale(1);
+            }
+            75% {
+                opacity: 1;
+                filter: contrast(2.5) hue-rotate(40deg);
+            }
+            100% {
+                opacity: 1;
+                filter: none;
+            }
+        }
+
+        .hijack-overlay.show {
+            pointer-events: auto;
+            animation: hijack-flash 0.18s steps(2, end) 20 forwards;
+        }
     </style>
 </head>
 <body>
-    <div class="id-card glitch">
+    <div class="id-card glitch" id="idCard">
         <div class="grid-lines"></div>
         <div class="scanline"></div>
         
@@ -224,10 +314,12 @@
             <div class="label">OCCUPATION</div>
             <div class="value">FEE ENFORCEMENT AGENT</div>
         </div>
+
         <div class="section yellow-text">
             <div class="label">HEALTH PROFILE</div>
             <div class="value">DIAGNOSIS: SMOKES LIKE A BROKEN EXHAUST PIPE</div>
         </div>
+
         <div class="section">
             <div class="label">URBAN LEVEL</div>
             <div class="value">NEON DISTRICT 7, LOWER LEVEL ACCESS</div>
@@ -278,8 +370,9 @@
             <div class="label">NEURAL CHIP STATUS</div>
             <div class="value">MALFUNCTION DETECTED</div>
         </div>
-        <div class="sersial">
-            SN: KR-0L15-N3ON-RN-2140-XF9
+
+        <div class="serial">
+            SN: <span>KR-0L15-N3ON-RN-2140-XF9</span>
         </div>
 
         <div class="warning-stamp">FLAGGED</div>
@@ -294,5 +387,36 @@
             </svg>
         </div>
     </div>
+
+    <!-- Hijack overlay -->
+    <div class="hijack-overlay" id="hijackOverlay">
+        <span>DEVICE HIJACKED</span>
+    </div>
+
+    <script>
+        window.addEventListener('load', function () {
+            // 10 seconds before crash / hijack
+            setTimeout(function () {
+                var card = document.getElementById('idCard');
+                var overlay = document.getElementById('hijackOverlay');
+                if (card) {
+                    card.classList.add('crash');
+                }
+                if (overlay) {
+                    overlay.classList.add('show');
+                }
+
+                // Wait roughly the duration of the hijack animation (0.18s * 20 ≈ 3600ms)
+                setTimeout(function () {
+                    // Attempt to close the window/tab
+                    window.close();
+
+                    // Optional fallback: blank out the page if close is blocked by the browser
+                    document.body.innerHTML = "";
+                    document.body.style.backgroundColor = "black";
+                }, 4000);
+            }, 10000);
+        });
+    </script>
 </body>
 </html>
